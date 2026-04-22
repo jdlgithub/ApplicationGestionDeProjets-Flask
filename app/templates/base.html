@@ -23,6 +23,11 @@
             <li class="site-header__item">
               <a class="site-header__link" href="{{ url_for('main.dashboard') }}">Tableau de bord</a>
             </li>
+            {% if current_user.is_student %}
+              <li class="site-header__item">
+                <a class="site-header__link" href="{{ url_for('projects.my_applications') }}">Mes candidatures</a>
+              </li>
+            {% endif %}
             {% if current_user.is_teacher or current_user.is_admin %}
               <li class="site-header__item">
                 <a class="site-header__link" href="{{ url_for('projects.new') }}">Nouveau projet</a>

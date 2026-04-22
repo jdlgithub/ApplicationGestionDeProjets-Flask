@@ -179,3 +179,18 @@ def application_action(app_id, action):
     flash('Candidature mise à jour.', 'success')
     # TODO: notification email simulée
     return redirect(url_for('projects.applications', project_id=app.project_id))
+
+
+@projects_bp.route('/my-applications')
+@login_required
+def my_applications():
+    """Liste des candidatures de l'étudiant connecté."""
+    if not current_user.is_student:
+        abort(403)
+    apps = (
+        Application.query.filter_by(student_id=current_user.id)
+        .join(Project, Application.project_id == Project.id)
+        .order_by(Application.applied_at.desc())
+        .all()
+    )
+    return render_template('projects/my_applications.html', applications=apps)

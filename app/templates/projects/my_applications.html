@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Mes candidatures — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>Mes candidatures</h1>
+
+  {% if not applications %}
+    <p class="muted">Vous n'avez pas encore postulé à un projet.</p>
+    <a class="button button--primary u-mt-2" href="{{ url_for('projects.list') }}">Voir les projets</a>
+  {% else %}
+    <div class="item-list u-mt-3">
+      {% for app in applications %}
+        <a class="item-list__link" href="{{ url_for('projects.detail', project_id=app.project.id) }}">
+          <div class="item-list__head">
+            <h5 class="item-list__name">{{ app.project.title }}</h5>
+            <span class="status-badge status-badge--{{ app.status }}">{{ app.status }}</span>
+          </div>
+          <p class="text-small muted">Envoyée le {{ app.applied_at.strftime('%d/%m/%Y') }}</p>
+          {% if app.project.domain %}
+            <p class="text-small muted">Domaine : {{ app.project.domain.name }}</p>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
