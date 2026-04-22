@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Plateforme Projets{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <header class="site-header">
+    <div class="page-container site-header__inner">
+      <a class="site-header__brand" href="{{ url_for('projects.list') }}">Projets Étudiants</a>
+      <button class="site-header__toggle" type="button" data-nav-toggle aria-controls="main-nav" aria-expanded="false" aria-label="Ouvrir le menu">
+        <span class="site-header__toggle-icon" aria-hidden="true"></span>
+      </button>
+      <div class="site-header__nav" id="main-nav">
+        <ul class="site-header__list site-header__list--primary">
+          <li class="site-header__item">
+            <a class="site-header__link" href="{{ url_for('projects.list') }}">Projets</a>
+          </li>
+          {% if current_user.is_authenticated %}
+            <li class="site-header__item">
+              <a class="site-header__link" href="{{ url_for('main.dashboard') }}">Tableau de bord</a>
+            </li>
+            {% if current_user.is_teacher or current_user.is_admin %}
+              <li class="site-header__item">
+                <a class="site-header__link" href="{{ url_for('projects.new') }}">Nouveau projet</a>
+              </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+        <ul class="site-header__list">
+          {% if current_user.is_authenticated %}
+            <li class="site-header__item">
+              <span class="site-header__user u-me-2">{{ current_user.email }} ({{ current_user.role }})</span>
+            </li>
+            <li class="site-header__item">
+              <a class="site-header__link" href="{{ url_for('auth.logout') }}">Déconnexion</a>
+            </li>
+          {% else %}
+            <li class="site-header__item">
+              <a class="site-header__link" href="{{ url_for('auth.login') }}">Connexion</a>
+            </li>
+            <li class="site-header__item">
+              <a class="site-header__link" href="{{ url_for('auth.register') }}">Inscription</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container page-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}" role="alert">
+            {{ message }}
+            <button type="button" class="flash__close" data-flash-dismiss aria-label="Fermer"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} — Plateforme Projets{% endblock %}
+{% block content %}
+  <nav aria-label="Fil d'Ariane">
+    <ol class="crumbs">
+      <li class="crumbs__item"><a href="{{ url_for('projects.list') }}">Projets</a></li>
+      <li class="crumbs__item crumbs__item--current" aria-current="page">{{ project.title }}</li>
+    </ol>
+  </nav>
+
+  <h1>{{ project.title }}</h1>
+  <p class="muted">
+    Domaine : {{ project.domain.name if project.domain else '—' }} ·
+    Statut : {{ project.status }} ·
+    Places : {{ project.max_students }} ·
+    Enseignant : {{ project.teacher.email }}
+  </p>
+  <div class="content-block">
+    {{ project.description or 'Aucune description.' }}
+  </div>
+
+  {% if current_user.is_authenticated and (current_user.id == project.teacher_id or current_user.is_admin) %}
+    <a href="{{ url_for('projects.edit', project_id=project.id) }}" class="button button--ghost">Modifier</a>
+    <a href="{{ url_for('projects.applications', project_id=project.id) }}" class="button button--ghost-muted">Voir les candidatures</a>
+  {% endif %}
+
+  {% if my_application %}
+    <div class="flash flash--info flash--compact u-mt-3" role="status">
+      Votre candidature : <strong>{{ my_application.status }}</strong> (envoyée le {{ my_application.applied_at.strftime('%d/%m/%Y') }}).
+    </div>
+  {% elif form and project.status == 'open' %}
+    <hr class="section-divider">
+    <h2>Postuler</h2>
+    <form method="post" action="{{ url_for('projects.apply', project_id=project.id) }}">
+      {{ form.hidden_tag() }}
+      <div class="field">
+        {{ form.motivation.label(class="field__label") }}
+        {{ form.motivation(class="input", rows=5) }}
+        {% if form.motivation.errors %}
+          <div class="text-error text-small">{{ form.motivation.errors[0] }}</div>
+        {% endif %}
+      </div>
+      {{ form.submit(class="button button--primary") }}
+    </form>
+  {% endif %}
+{% endblock %}

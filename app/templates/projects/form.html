@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Modifier' if project else 'Nouveau projet' }} — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>{{ 'Modifier le projet' if project else 'Nouveau projet' }}</h1>
+  <form method="post" action="{{ url_for('projects.new') if not project else url_for('projects.edit', project_id=project.id) }}" class="u-mt-3 form-stack--medium">
+    {{ form.hidden_tag() }}
+    <div class="field">
+      {{ form.title.label(class="field__label") }}
+      {{ form.title(class="input") }}
+      {% if form.title.errors %}
+        <div class="text-error text-small">{{ form.title.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ form.description.label(class="field__label") }}
+      {{ form.description(class="input", rows=4) }}
+    </div>
+    <div class="field">
+      {{ form.domain_id.label(class="field__label") }}
+      {{ form.domain_id(class="select") }}
+    </div>
+    <div class="field">
+      {{ form.max_students.label(class="field__label") }}
+      {{ form.max_students(class="input", type="number", min=1) }}
+      {% if form.max_students.errors %}
+        <div class="text-error text-small">{{ form.max_students.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ form.status.label(class="field__label") }}
+      {{ form.status(class="select") }}
+    </div>
+    {{ form.submit(class="button button--primary") }}
+    <a href="{{ url_for('projects.detail', project_id=project.id) if project else url_for('projects.list') }}" class="button button--secondary">Annuler</a>
+  </form>
+{% endblock %}

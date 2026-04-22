@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Accueil — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>Bienvenue</h1>
+  <p>Plateforme de gestion de projets étudiants.</p>
+  <a class="button button--primary" href="{{ url_for('projects.list') }}">Voir les projets</a>
+{% endblock %}

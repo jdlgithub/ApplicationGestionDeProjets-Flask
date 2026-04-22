@@ -1,0 +1,23 @@
+# Plateforme de gestion de projets étudiants
+# Flask 
+Flask>=3.0,<4
+Flask-SQLAlchemy>=3.1
+Flask-Migrate>=4.0
+Flask-Login>=0.6
+Flask-WTF>=1.2
+Flask-JWT-Extended>=4.6
+
+# Base de données MySQL
+PyMySQL>=1.1
+cryptography>=41.0
+
+# Env et sécurité
+python-dotenv>=1.0
+email-validator>=2.0
+
+# Utilitaires
+Werkzeug>=3.0
+
+# Tests
+pytest>=7.0
+pytest-cov>=4.0

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Inscription — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>Inscription</h1>
+  <form method="post" action="{{ url_for('auth.register') }}" class="u-mt-3 form-stack--narrow">
+    {{ form.hidden_tag() }}
+    <div class="field">
+      {{ form.email.label(class="field__label") }}
+      {{ form.email(class="input", type="email", autocomplete="email") }}
+      {% if form.email.errors %}
+        <div class="text-error text-small">{{ form.email.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ form.password.label(class="field__label") }}
+      {{ form.password(class="input", autocomplete="new-password") }}
+      {% if form.password.errors %}
+        <div class="text-error text-small">{{ form.password.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ form.password_confirm.label(class="field__label") }}
+      {{ form.password_confirm(class="input", autocomplete="new-password") }}
+      {% if form.password_confirm.errors %}
+        <div class="text-error text-small">{{ form.password_confirm.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ form.role.label(class="field__label") }}
+      {{ form.role(class="select") }}
+    </div>
+    {{ form.submit(class="button button--primary") }}
+  </form>
+  <p class="u-mt-3">
+    Déjà inscrit ? <a href="{{ url_for('auth.login') }}">Se connecter</a>
+  </p>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Connexion — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>Connexion</h1>
+  <form method="post" action="{{ url_for('auth.login') }}" class="u-mt-3 form-stack--narrow">
+    {{ form.hidden_tag() }}
+    <div class="field">
+      {{ form.email.label(class="field__label") }}
+      {{ form.email(class="input", type="email", autocomplete="email") }}
+      {% if form.email.errors %}
+        <div class="text-error text-small">{{ form.email.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ form.password.label(class="field__label") }}
+      {{ form.password(class="input", autocomplete="current-password") }}
+      {% if form.password.errors %}
+        <div class="text-error text-small">{{ form.password.errors[0] }}</div>
+      {% endif %}
+    </div>
+    {{ form.submit(class="button button--primary") }}
+  </form>
+  <p class="u-mt-3">
+    Pas de compte ? <a href="{{ url_for('auth.register') }}">S'inscrire</a>
+  </p>
+{% endblock %}

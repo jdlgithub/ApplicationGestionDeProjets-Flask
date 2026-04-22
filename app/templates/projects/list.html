@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Projets — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>Projets ouverts</h1>
+
+  <form method="get" action="{{ url_for('projects.list') }}" class="filters">
+    <div class="filters__cell">
+      <input type="text" name="q" class="input" placeholder="Recherche (titre, description)" value="{{ q or '' }}">
+    </div>
+    <div class="filters__cell">
+      <select name="domain_id" class="select select--fit">
+        <option value="">Tous les domaines</option>
+        {% for d in domains %}
+          <option value="{{ d.id }}" {% if domain_id == d.id %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filters__cell">
+      <button type="submit" class="button button--primary">Filtrer</button>
+    </div>
+  </form>
+
+  {% if not projects %}
+    <p class="muted">Aucun projet ouvert pour le moment.</p>
+  {% else %}
+    <div class="item-list">
+      {% for project in projects %}
+        <a href="{{ url_for('projects.detail', project_id=project.id) }}" class="item-list__link">
+          <div class="item-list__head">
+            <h5 class="item-list__name">{{ project.title }}</h5>
+            <span class="text-small muted">{{ project.domain.name if project.domain else '—' }}</span>
+          </div>
+          <p class="u-mb-1 muted text-small">{{ project.description[:150] }}{% if project.description and project.description|length > 150 %}…{% endif %}</p>
+          <p class="text-small muted">Enseignant : {{ project.teacher.email }} · {{ project.applications.count() }} candidature(s)</p>
+        </a>
+      {% endfor %}
+    </div>
+
+    {% if pagination.pages > 1 %}
+      <nav class="u-mt-3" aria-label="Pagination des projets">
+        <ul class="pager">
+          <li class="pager__item {% if not pagination.has_prev %}pager__item--disabled{% endif %}">
+            <a class="pager__link" href="{{ url_for('projects.list', page=pagination.prev_num, q=q, domain_id=domain_id) if pagination.has_prev else '#' }}">Précédent</a>
+          </li>
+          {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            <li class="pager__item {% if p == pagination.page %}pager__item--active{% endif %}">
+              <a class="pager__link" href="{{ url_for('projects.list', page=p or 1, q=q, domain_id=domain_id) }}">{{ p or '…' }}</a>
+            </li>
+          {% endfor %}
+          <li class="pager__item {% if not pagination.has_next %}pager__item--disabled{% endif %}">
+            <a class="pager__link" href="{{ url_for('projects.list', page=pagination.next_num, q=q, domain_id=domain_id) if pagination.has_next else '#' }}">Suivant</a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
+  {% endif %}
+{% endblock %}

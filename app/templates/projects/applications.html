@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Candidatures — {{ project.title }}{% endblock %}
+{% block content %}
+  <nav aria-label="Fil d'Ariane">
+    <ol class="crumbs">
+      <li class="crumbs__item"><a href="{{ url_for('projects.list') }}">Projets</a></li>
+      <li class="crumbs__item"><a href="{{ url_for('projects.detail', project_id=project.id) }}">{{ project.title }}</a></li>
+      <li class="crumbs__item crumbs__item--current" aria-current="page">Candidatures</li>
+    </ol>
+  </nav>
+
+  <h1>Candidatures — {{ project.title }}</h1>
+
+  {% if not applications %}
+    <p class="muted">Aucune candidature pour le moment.</p>
+  {% else %}
+    <div class="item-list">
+      {% for app in applications %}
+        <div class="item-list__block">
+          <div class="item-list__head">
+            <h5 class="item-list__name">{{ app.student.email }}</h5>
+            <span class="status-badge status-badge--{{ app.status }}">{{ app.status }}</span>
+          </div>
+          <p class="u-mb-1">{{ app.motivation }}</p>
+          <p class="text-small muted">Envoyée le {{ app.applied_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+          {% if app.status == 'pending' %}
+            <div class="u-mt-2">
+              <form method="post" action="{{ url_for('projects.application_action', app_id=app.id, action='accept') }}" class="form--inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="button button--small button--positive">Accepter</button>
+              </form>
+              <form method="post" action="{{ url_for('projects.application_action', app_id=app.id, action='reject') }}" class="form--inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="button button--small button--negative">Refuser</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <a href="{{ url_for('projects.detail', project_id=project.id) }}" class="button button--secondary u-mt-3">Retour au projet</a>
+{% endblock %}

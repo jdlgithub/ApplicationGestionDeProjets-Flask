@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord — Plateforme Projets{% endblock %}
+{% block content %}
+  <h1>Tableau de bord</h1>
+  <p class="muted">Connecté en tant que <strong>{{ current_user.email }}</strong> ({{ current_user.role }}).</p>
+
+  {% if current_user.is_student %}
+    <div class="dashboard-cols">
+      <div class="dashboard-cols__item">
+        <div class="tile">
+          <div class="tile__body">
+            <h5 class="tile__title">Mes candidatures</h5>
+            <p class="tile__text">Consultez vos candidatures et leurs statuts.</p>
+            <a href="{{ url_for('projects.list') }}" class="button button--primary">Voir les projets</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif current_user.is_teacher or current_user.is_admin %}
+    <div class="dashboard-cols">
+      <div class="dashboard-cols__item">
+        <div class="tile">
+          <div class="tile__body">
+            <h5 class="tile__title">Mes projets</h5>
+            <p class="tile__text">Gérez vos projets et les candidatures.</p>
+            <a href="{{ url_for('projects.new') }}" class="button button--primary">Nouveau projet</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
